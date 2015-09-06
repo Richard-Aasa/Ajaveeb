@@ -1,4 +1,9 @@
-Simple Blog part 1: The Build
-=============
+Tudengi ajaveeb
+===============
 
-These files acompany the tutorial: [Creating a blog from scratch with PHP](http://daveismyname.com/creating-a-blog-from-scratch-with-php-bp)
+*Postitused kategooriatesse jagatud
+-Logimissüsteem
+-Backend
+-Kommentaarid
+-RSS
+-Autentimine OAuth2-ga
