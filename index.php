@@ -1,6 +1,6 @@
 <?php require('includes/config.php'); ?>
 <!DOCTYPE html>
-<html lang="en">
+<html class=“no-js”>
 <head>
     <meta charset="utf-8">
     <title>Ajaveeb</title>
@@ -8,8 +8,7 @@
           rel="stylesheet">
     <link href="css/materialize.min.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
-    <script src="js/modernizr.js"></script> <!-- Modernizr -->
-
+    <script src="js/modernizr.js"></script> <!-- Modernizr toetus kõikidele brauseritele-->
 </head>
 <body>
   <header class="center-align">
@@ -27,22 +26,39 @@
     <h1>Richard Aasa</h1>
     <h5>150885IFIFB.DT</h5>
   </header>
-
 	<div class="row">
-
     <div class="col s12 l8 offset-l2 z-depth-2" id="wrapper">
-
-
-
+	
   		<?php
+			$posts = new Post($db);
+			if(!empty($_GET['tag'])) {
+				$posts->filter('postTag',$_GET['tag']);
+				// If no posts with such tag exist redirect
+				if(count($posts->$array) == 0) {
+					header('Location: ./');
+				}
+			} else {
+				$posts->all();
+			}
+			
+			foreach($posts->$array as $post) {
+				echo '<div>';
+					echo '<h3 class="center-align"><a href="viewpost.php?id='.$post['postID'].'">'.$post['postTitle'].'</a></h3>';
+					echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($post['postDate'])).'</p>';
+					echo $post['postDesc'];
+					echo '<p><a class="waves-effect waves-red grey darken-1 btn" href="viewpost.php?id='.$row['postID'].'"><i class="material-icons right">forward</i>Loe edasi</a></p>';
+                echo '</div>';
+			}
+			
+			/*
   			try {
           $cat = isset($_GET['category']) ? $_GET['category'] : '';
           //if no specific category queried
           if($cat === "") {
             // db from config.php
-            $stmt = $db->query("SELECT postID, postTitle, postDesc, postDate, postCategory FROM blog_posts ORDER BY postID DESC");
+            $stmt = $db->query("SELECT postID, postTitle, postDesc, postDate, postTag FROM posts ORDER BY postID DESC");
           } else {
-            $stmt = $db->query("SELECT postID, postTitle, postDesc, postDate, postCategory FROM blog_posts WHERE postCategory = '$cat' ORDER BY postID DESC");
+            $stmt = $db->query("SELECT postID, postTitle, postDesc, postDate, postTag FROM posts WHERE postTag = '$cat' ORDER BY postID DESC");
           }
           //no results from ?category
           if($stmt->rowCount() === 0) {
@@ -54,8 +70,8 @@
     						echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($row['postDate'])).'</p>';
     						echo '<p>'.$row['postDesc'].'</p>';
     						echo '<p><a class="waves-effect waves-red grey darken-1 btn" href="viewpost.php?id='.$row['postID'].'"><i class="material-icons right">forward</i>Loe edasi</a></p>';
-                echo '<div id="'.$row['postCategory'].'" class="hide-on-med-and-down cat">';
-                  echo '<a href="?category='.$row['postCategory'].'">'.$row['postCategory'].'</a>';
+                echo '<div id="'.$row['postTag'].'" class="hide-on-med-and-down cat">';
+                  echo '<a href="?category='.$row['postTag'].'">'.$row['postTag'].'</a>';
                 echo '</div>';
     					echo '</div>';
 
@@ -64,15 +80,14 @@
 
   			} catch(PDOException $e) {
   			    echo $e->getMessage();
-  			}
+  			}*/
   		?>
+		
     </div>
 	</div>
-
   <script src="js/jquery-2.1.4.min.js"></script>
   <script src="js/materialize.min.js"></script>
   <script src="js/init.js"></script>
-
   </script>
 </body>
 </html>
