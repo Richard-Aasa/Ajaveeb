@@ -1,11 +1,10 @@
 <?php require('includes/config.php');
 
-$stmt = $db->prepare('SELECT postID, postTitle, postCont, postDate FROM posts WHERE postID = :postID');
-$stmt->execute(array(':postID' => $_GET['id']));
-$row = $stmt->fetch();
+$query = new Post($db);
+// Return post by ID
+$post = $query->byID($_GET['id']);
 
-//if post does not exists redirect user.
-if($row['postID'] == ''){
+if (empty($post)) {
 	header('Location: ./');
 	exit;
 }
@@ -45,11 +44,13 @@ if($row['postID'] == ''){
     <div class="col s12 l8 offset-l2 z-depth-2" id="wrapper">
 			<?php
 				echo '<div>';
-					echo '<h2>'.$row['postTitle'].'</h2>';
+					echo '<h2>'.$post['postTitle'].'</h2>';
 					echo '<hr />';
 					echo '<p><a class="waves-effect waves-red grey darken-1 btn" href="'.$_SERVER['HTTP_REFERER'].'"><i class="material-icons right">forward</i>Tagasi</a></p>';
-					echo '<p>Posted on '.date('jS M Y', strtotime($row['postDate'])).'</p>';
-					echo '<p>'.$row['postCont'].'</p>';
+					echo '<p>Posted on '.date('jS M Y', strtotime($post['postDate'])).'</p>';
+					echo $post['postTag'];
+					echo $post['postCont'];
+
 				echo '</div>';
 			?>
     </div>

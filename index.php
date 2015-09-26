@@ -28,61 +28,31 @@
   </header>
 	<div class="row">
     <div class="col s12 l8 offset-l2 z-depth-2" id="wrapper">
-	
+
   		<?php
-			$posts = new Post($db);
+			$query = new Post($db);
 			if(!empty($_GET['tag'])) {
-				$posts->filter('postTag',$_GET['tag']);
-				// If no posts with such tag exist redirect
-				if(count($posts->$array) == 0) {
+				$query->filter('postTag',$_GET['tag']);
+				// If no query with such tag exist redirect
+				if(count($query->$array) == 0) {
 					header('Location: ./');
 				}
 			} else {
-				$posts->all();
+				$query->all();
 			}
-			
-			foreach($posts->$array as $post) {
+			//var_dump(get_object_vars($query));
+			foreach($query->array as $post) {
 				echo '<div>';
 					echo '<h3 class="center-align"><a href="viewpost.php?id='.$post['postID'].'">'.$post['postTitle'].'</a></h3>';
 					echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($post['postDate'])).'</p>';
 					echo $post['postDesc'];
-					echo '<p><a class="waves-effect waves-red grey darken-1 btn" href="viewpost.php?id='.$row['postID'].'"><i class="material-icons right">forward</i>Loe edasi</a></p>';
-                echo '</div>';
+					echo '<p><a class="waves-effect waves-red grey darken-1 btn" href="viewpost.php?id='.$post['postID'].'"><i class="material-icons right">forward</i>Loe edasi</a></p>';
+          echo $post['postTag'];
+        echo '</div>';
 			}
-			
-			/*
-  			try {
-          $cat = isset($_GET['category']) ? $_GET['category'] : '';
-          //if no specific category queried
-          if($cat === "") {
-            // db from config.php
-            $stmt = $db->query("SELECT postID, postTitle, postDesc, postDate, postTag FROM posts ORDER BY postID DESC");
-          } else {
-            $stmt = $db->query("SELECT postID, postTitle, postDesc, postDate, postTag FROM posts WHERE postTag = '$cat' ORDER BY postID DESC");
-          }
-          //no results from ?category
-          if($stmt->rowCount() === 0) {
-            header('Location: ./');
-          } else {
-            while($row = $stmt->fetch()){
-    					echo '<div>';
-    						echo '<h3 class="center-align"><a href="viewpost.php?id='.$row['postID'].'">'.$row['postTitle'].'</a></h3>';
-    						echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($row['postDate'])).'</p>';
-    						echo '<p>'.$row['postDesc'].'</p>';
-    						echo '<p><a class="waves-effect waves-red grey darken-1 btn" href="viewpost.php?id='.$row['postID'].'"><i class="material-icons right">forward</i>Loe edasi</a></p>';
-                echo '<div id="'.$row['postTag'].'" class="hide-on-med-and-down cat">';
-                  echo '<a href="?category='.$row['postTag'].'">'.$row['postTag'].'</a>';
-                echo '</div>';
-    					echo '</div>';
 
-    				}
-          }
-
-  			} catch(PDOException $e) {
-  			    echo $e->getMessage();
-  			}*/
   		?>
-		
+
     </div>
 	</div>
   <script src="js/jquery-2.1.4.min.js"></script>
